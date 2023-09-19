@@ -21,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
     // final int value2 = ref.watch(counterStateProvider);
 
     return
-       const Scaffold(
+       Scaffold(
         backgroundColor: Colors.green,
         body: Text("app set")
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:todolist/homescreen.dart';
 import 'package:todolist/provider/data_provider.dart';
 
 // globle get method data 👇👇👇👇👇
@@ -60,12 +61,18 @@ class RegisterScreen extends ConsumerWidget {
               ),
             ),
 
-            SizedBox(width: 300,child: ElevatedButton(onPressed:()async{
-
+            SizedBox(width: 300,child: ElevatedButton(onPressed:(){
               //LoginUser(email: "srk",password: "srksrk");
 
-               createUser(name: txtName1.toString(),email: txtEmail.toString(),dob: txtDob.toString(), password: txtPass.toString(), gender: txtDob.toString());
-              print(txtDob.text);
+             //  createUser(name: txtName1.text.toString(),email: txtEmail.text.toString(),dob: txtDob.text.toString(), password: txtPass.text.toString(), gender: txtGender.text.toString());
+              print(txtEmail.text.toString());
+
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>  HomeScreen(),
+                ),
+              );
 
             }, child: const Text("Register") )),
             SizedBox(width: 300,child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.indigoAccent),onPressed:(){ }, child: const Text("Login") )),
@@ -104,7 +111,6 @@ class RegisterScreen extends ConsumerWidget {
     );
     print("code221");
     print(queryResult);
-
     // return queryResult.data?['createUser'] ?? false; // queryResult.data contains response data here after creation my api return true
     //  and if it's null then i am return false
   }
