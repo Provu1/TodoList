@@ -1,19 +1,20 @@
 
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:todolist/Models/todo_call.dart';
+import 'package:todolist/Models/Names/add_variables.dart';
 
-import 'SharedPreferences_data.dart';
+import 'Local_Pref/sharedPreferences_data.dart';
 
 TextEditingController txtTitleN = TextEditingController();
 TextEditingController txtDescriptionN = TextEditingController();
-//TextEditingController txtId = TextEditingController();
 final todoDeleteNew =  todoDelete._();
 class todoDelete{
   todoDelete._();
   Future<dynamic> todoDeleteSet({required String? id}) async {
-    HttpLink link = HttpLink("http://localhost:5000/graphql", defaultHeaders: {
+    HttpLink link = HttpLink(addVariables.URL, defaultHeaders: {
       'Authorization':"${sharedPrefdata.getString('token')}", // Example: Adding an Authorization header
     },); // it's my url
     GraphQLClient qlClient = GraphQLClient( // craete a graphql client
@@ -21,7 +22,7 @@ class todoDelete{
       cache: GraphQLCache(
         store: HiveStore(),
       ),
-    ); // ignore , just for cacheing
+    );
     QueryResult result = await qlClient.mutate( // use mutate method for mutation
       MutationOptions( // we use mutation options
           fetchPolicy: FetchPolicy.networkOnly,// you can use different policy as per your need
@@ -36,11 +37,10 @@ class todoDelete{
       ),
     );
     if (result.hasException) {
-      print("fall");
+      log("fall");
     } else {
-      print("$result");
+      log("$result");
 
-      Showtodo.todoShow();
     }
   }
 }

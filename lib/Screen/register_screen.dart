@@ -1,25 +1,14 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:todolist/Screen/home_screen.dart';
-
+import '../Models/Names/add_variables.dart';
 import '../Models/auth_data.dart';
 
-// globle get method data 👇👇👇👇👇
-final helloWorldProvider3 = Provider((_) => 'Hello world16 ');
-
-// globle set method 👇👇👇👇👇
-final counterStateProvider = StateProvider<int>((ref) {
-  return 0;
-});
 
 class RegisterScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final String value = ref.watch(helloWorldProvider3);
-    // final int value2 = ref.watch(counterStateProvider);
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.indigoAccent,
@@ -33,35 +22,35 @@ class RegisterScreen extends ConsumerWidget {
               ),
             ),
             TextField(
-              controller: txtName,
+              controller: addVariables.txtName,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Name',
               ),
             ),
             TextField(
-              controller: txtEmail,
+              controller: addVariables.txtEmail,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Email',
               ),
             ),
             TextField(
-              controller: txtDob,
+              controller: addVariables.txtDob,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Dob',
               ),
             ),
             TextField(
-              controller: txtGender,
+              controller: addVariables.txtGender,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Gender',
               ),
             ),
             TextField(
-              controller: txtPass,
+              controller: addVariables.txtPass,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Password',
@@ -73,23 +62,14 @@ class RegisterScreen extends ConsumerWidget {
                     onPressed: () async {
                       //context.go("/home");
                       authdata.createUser(
-                          name: txtName.text.toString(),
-                          email: txtEmail.text.toString(),
-                          dob: txtDob.text.toString(),
-                          password: txtPass.text.toString(),
-                          gender: txtGender.text.toString(),
+                          name: addVariables.txtName.text.toString(),
+                          email: addVariables.txtEmail.text.toString(),
+                          dob: addVariables.txtDob.text.toString(),
+                          password: addVariables.txtPass.text.toString(),
+                          gender:addVariables.txtGender.text.toString(),
                           context: context);
                     },
                     child: const Text("Register"))),
-            SizedBox(
-                width: 300,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigoAccent),
-                    onPressed: () {
-                      context.go("/login");
-                    },
-                    child: const Text("Login"))),
           ],
         ),
       ),

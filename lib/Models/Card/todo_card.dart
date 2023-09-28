@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todolist/Models/todoDelete.dart';
-import 'package:todolist/Models/todo_Update.dart';
-import 'package:todolist/Models/todo_add.dart';
-import 'package:todolist/Models/todo_call.dart';
+import 'package:todolist/Models/todo_delete.dart';
+import 'package:todolist/Models/todo_update.dart';
 
 class TodoCard extends StatelessWidget {
   final String title;
@@ -25,7 +23,7 @@ class TodoCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: GoogleFonts.poppins(color: Colors.blue),
+                style: GoogleFonts.poppins(color: Color(0xfff9288F8)),
               ),
               Text(description),
             ],
@@ -66,6 +64,7 @@ class TodoCard extends StatelessWidget {
                                     title: txtTitleN.text,
                                     description: txtDescriptionN.text,
                                     id: id);
+                                Navigator.pop(context);
                               },
                               child: const Text("Update"))
                         ],
@@ -76,7 +75,8 @@ class TodoCard extends StatelessWidget {
           GestureDetector(
               onTap: () async {
                 await todoDeleteNew.todoDeleteSet(id: id);
-                await Showtodo.todoShow();
+
+              //  await Showtodo.todoShow();
               },
               child: Icon(Icons.delete_forever))
         ],

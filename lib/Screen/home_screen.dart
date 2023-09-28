@@ -1,95 +1,98 @@
+import 'dart:js_interop';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todolist/Models/todo_call.dart';
-import 'package:todolist/Models/todo_Card.dart';
+import 'package:todolist/Models/Card/todo_card.dart';
+import 'package:todolist/Models/todo_add.dart';
 
-import '../Models/SharedPreferences_data.dart';
-import '../Models/auth_data.dart';
-import '../Models/todo_add.dart';
-// final helloWorldProvider3 = Provider((_) => 'Hello world16 ');
-//
-// final counterStateProvider = StateProvider<dynamic>((ref) {
-//   return 0;
-// });
+
+import '../Models/todo_delete.dart';
+import '../provider/api_call_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    {
-     final dataValue = ref.watch(fetchToDosProvider);
 
-      return dataValue.when(
-        data: (data) {
-          print('data: $data');
+    late Stream dataValue;
+
+    Stream getItem() async*{
+        await Future.delayed(const Duration(seconds: 1));
+        dataValue = ref.watch(homePrfProviderUri).todoShow();
+
+        print("state call");
+
+      yield* dataValue;
+    }
+    return StreamBuilder(
+      stream: getItem(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if(snapshot.data == null){
+          return const Center(child: CircularProgressIndicator());
+        }else{
+          final item = snapshot.data!;
           return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.purpleAccent,
-              // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title:  const Text('TODO List'),
-            ),
+            appBar: AppBar(title: const Text("Todo List"),backgroundColor: const Color(0xff9288F8)),
             body: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) => TodoCard(
-                  description: data[index].description,
-                  id: data[index].id,
-                  title: data[index].title),
+                itemCount: item.length,
+                itemBuilder: (context, index) =>
+                    TodoCard(
+                        description: snapshot.data?[index].description,
+                        id: snapshot.data?[index].id,
+                        title: snapshot.data?[index].title)
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                var a = sharedPrefdata.getString('token');
-                print(a);
-                showModalBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25.0),
-                        topRight: Radius.circular(25.0),
-                      ),
-                    ), context: context,
-                    // context: context,
-                    builder: (context) {
-                      return  Column(
-                        children: [
-                          Text("Add New",style: GoogleFonts.poppins(color: Colors.blue)),
-                          TextField(
-                            controller: txtTitle,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Title',
-                            ),
+              backgroundColor: Colors.blueAccent,autofocus: true, onPressed: () {
+              showModalBottomSheet(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0),
+                      topRight: Radius.circular(25.0),
+                    ),
+                  ),
+                  context: context,
+                  // context: context,
+                  builder: (context) {
+                    return Column(
+                      children: [
+                        Text("Edit",
+                            style: GoogleFonts.poppins(color: Colors.blue)),
+                        TextField(
+                          controller: txtTitleN,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Title',
                           ),
-                          TextField(
-                            controller: txtDescription,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Description',
-                            ),
+                        ),
+                        TextField(
+                          controller: txtDescriptionN,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Description',
                           ),
-                          ElevatedButton(onPressed:(){
-                            todoAddNew.
-                            todoNew(title: txtTitle.text, description: txtDescription.text );
-                          }, child: const Text("Update"))
-                        ],
-                      );
-                    }
-                );
-              },
-              tooltip: 'Increment',
-              child: const Icon(Icons.edit),
-            ), // This trailing comma makes auto-formatting nicer for build methods.
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              todoAddNew.todoNew(
+                                  title: txtTitleN.text,
+                                  description: txtDescriptionN.text,
+                                 );
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Create"))
+                      ],
+                    );
+                  });
+
+            },
+              child: const Icon(CupertinoIcons.pen,size: 40),
+            ),
           );
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        error: (error, stackTrace) => const Center(
-          child: SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: Text('Error'),
-          ),
-        ),
-      );
+        }
+      },
+    );
     }
-}}
+}
+

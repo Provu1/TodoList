@@ -9,10 +9,10 @@ class AppRouter {
    static GoRouter router = GoRouter(
       routes: [
         GoRoute(
-          name: MyAppRouteConstants.RegisterName,
+          name: MyAppRouteConstants.loginRouteName,
           path: '/',
           pageBuilder: (context, state) {
-            return MaterialPage(child: RegisterScreen() );
+            return MaterialPage(child: LoginScreen() );
           },
         ),
         GoRoute(
@@ -23,10 +23,10 @@ class AppRouter {
           },
         ),
         GoRoute(
-          name: MyAppRouteConstants.loginRouteName,
-          path: '/login',
+          name: MyAppRouteConstants.registerName,
+          path: '/register',
           pageBuilder: (context, state) {
-            return  MaterialPage(child: LoginScreen());
+            return  MaterialPage(child: RegisterScreen());
           },
         ),
       ],

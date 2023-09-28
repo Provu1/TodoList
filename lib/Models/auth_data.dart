@@ -1,23 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todolist/Models/Names/add_variables.dart';
 
-import 'SharedPreferences_data.dart';
+import 'Local_Pref/sharedPreferences_data.dart';
 
 final authdata = auth._();
-//Text
-TextEditingController txtEmail = TextEditingController();
-TextEditingController txtName = TextEditingController();
-TextEditingController txtDob =  TextEditingController();
-TextEditingController txtGender = TextEditingController();
-TextEditingController txtPass = TextEditingController();
 
 class auth {
   auth._();
-
   //create user
   Future<dynamic> createUser(
+
       {required String? name,
       required String? email,
       required String? dob,
@@ -25,7 +21,7 @@ class auth {
       required String? password,
       required BuildContext context}) async {
     try {
-      HttpLink link = HttpLink("http://localhost:5000/graphql");
+      HttpLink link = HttpLink(addVariables.URL);
       GraphQLClient qlClient = GraphQLClient(
         link: link,
         cache: GraphQLCache(
@@ -36,7 +32,7 @@ class auth {
         MutationOptions(
             fetchPolicy: FetchPolicy.networkOnly,
             document: gql(
-                ''' mutation(\$name: String!, \$email: String!, \$dob: Date!, \$gender: String!, \$password: String!){
+                '''mutation(\$name: String!, \$email: String!, \$dob: Date!, \$gender: String!, \$password: String!){
           registerUser(name: \$name, email: \$email, dob: \$dob, gender: \$gender, password: \$password) {
           token
           user {
@@ -58,25 +54,23 @@ class auth {
       print(queryResult);
 
       if (queryResult.hasException) {
-        print(" Error Exception ");
+        log(" Error Exception ");
       } else {
-        print("Successfully work");
+        log("Successfully Register");
         context.go("/home");
       }
     } catch (e) {
-      print("Register Method does not work");
+      log("Register Method does not work");
     }
   }
-
 // Login -- Method
   Future<dynamic> LoginUser(
       {required String? email,
       required String? password,
       required BuildContext context}) async {
     try {
-      HttpLink link = HttpLink("http://localhost:5000/graphql"); // it's my url
+      HttpLink link = HttpLink(addVariables.URL); // it's my url
       GraphQLClient qlClient = GraphQLClient(
-        // craete a graphql client
         link: link,
         cache: GraphQLCache(
           store: HiveStore(),
@@ -100,16 +94,17 @@ class auth {
       // await prefs.setString('token', "Bearer " + queryResult.data!["loginUser"]["token"]);
       sharedPrefdata.setString("token","Bearer "+queryResult.data!["loginUser"]["token"]);
 
-      print(queryResult);
-      print("Bearer " + queryResult.data!["loginUser"]["token"]);
+      log("$queryResult");
+      log("Bearer "+ queryResult.data!["loginUser"]["token"]);
       if (queryResult.hasException) {
-        print(" Login Error Exception ");
+        log(" Login Error Exception ");
       } else {
-        print("Login Successfully ");
+        log("Login Successfully ");
         context.go("/home");
+
       }
     } catch (e) {
-      print("Login Method does not work");
+      log("Login Method does not work");
     }
   }
 }
